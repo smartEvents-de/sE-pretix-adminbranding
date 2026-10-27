@@ -1,0 +1,40 @@
+{% extends "pretixcontrol/base.html" %}
+{% block title %}Admin-Farbe{% endblock %}
+{% block content %}
+    <h1>Admin-Farbe</h1>
+    <p class="help-block">
+        Ersetzt das pretix-Lila (Kopfzeile, Buttons, Links, Akzente) im Admin-Bereich <em>und</em> im Shop durch eine frei gewählte Farbe,
+        inklusive Hover- sowie Hell- und Dunkeltönen. Ohne gespeicherte Farbe gilt das pretix-Standarddesign.
+        Empfohlen sind dunklere Farben (weiße Schrift auf Buttons). Im Shop bleibt eine selbst gesetzte Event- oder Veranstalterfarbe erhalten;
+        die Farbe hier gilt nur dort, wo keine eigene gesetzt ist.
+    </p>
+    {% for w in warnings %}
+        <div class="alert alert-warning"><strong>Kompatibilität:</strong> {{ w }}</div>
+    {% empty %}
+        <p class="text-success"><span class="fa fa-check"></span> Kompatibilitätsprüfung: das pretix-CSS hat den erwarteten Aufbau.</p>
+    {% endfor %}
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Farbe festlegen</h3></div>
+        <div class="panel-body">
+            <form method="post" class="form-horizontal">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="picker">Farbwähler</label>
+                    <div class="col-md-9"><input type="color" id="picker" name="picker" value="{{ picker }}"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="hex">Oder Hex-Wert</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="hex" name="hex" maxlength="7" placeholder="#336699" style="max-width: 10em">
+                        <div class="help-block">Wenn ausgefüllt, gilt dieser Wert statt des Farbwählers.
+                            Aktuell gespeichert: <strong>{{ current|default:"– (pretix-Standard)" }}</strong></div>
+                    </div>
+                </div>
+                <div class="form-group submit-group">
+                    <button type="submit" name="action" value="save" class="btn btn-primary btn-save">Speichern</button>
+                    <button type="submit" name="action" value="reset" class="btn btn-default">Zurücksetzen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
